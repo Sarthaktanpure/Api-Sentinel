@@ -1,206 +1,265 @@
-# API Sentinel
+ <div align="center">
 
-### Monitor. Detect. Understand.
+<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=700&size=25&duration=2800&pause=900&color=38BDF8&center=true&vCenter=true&width=900&lines=API+Sentinel;API+Monitoring+%26+Observability+Platform;Monitor+endpoints.+Measure+performance.+Detect+failures." alt="API Sentinel animated title" />
 
-**A real-time API monitoring platform that helps developers track endpoint health, measure response times, detect failures, and maintain a history of API performance.**
+<br/>
 
-<p align="center">
-  <a href="YOUR_LIVE_URL">Live Demo ↗</a>
+<p>
+<strong>A centralized API monitoring platform built to track endpoint health, measure response times, and maintain a history of monitoring results.</strong>
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/React-2026-blue?logo=react" alt="React" />
-  <img src="https://img.shields.io/badge/Node.js-Backend-339933?logo=node.js&logoColor=white" alt="Node.js" />
-  <img src="https://img.shields.io/badge/Express.js-Framework-black?logo=express" alt="Express" />
-  <img src="https://img.shields.io/badge/MongoDB-Database-47A248?logo=mongodb&logoColor=white" alt="MongoDB" />
-  <img src="https://img.shields.io/badge/Vite-Frontend-646CFF?logo=vite&logoColor=white" alt="Vite" />
-  <img src="https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=black" alt="JavaScript" />
+<p>
+<img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React"/>
+<img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite"/>
+<img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js"/>
+<img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express"/>
+<img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB"/>
 </p>
+
+<p>
+<img src="https://img.shields.io/badge/Axios-5A29E4?style=flat-square&logo=axios&logoColor=white" alt="Axios"/>
+<img src="https://img.shields.io/badge/Mongoose-880000?style=flat-square&logo=mongoose&logoColor=white" alt="Mongoose"/>
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript"/>
+<img src="https://img.shields.io/badge/Architecture-REST%20API-0EA5E9?style=flat-square" alt="REST API"/>
+</p>
+
+<em>Register endpoints. Execute health checks. Understand API reliability.</em>
+
+<br/>
+
+**[Live Application](YOUR_LIVE_URL_HERE)**
+
+</div>
 
 ---
 
-## Overview
+## What is API Sentinel?
 
-API Sentinel is an API monitoring and observability platform designed to make endpoint health visible and actionable.
+**API Sentinel** is an API monitoring and observability platform designed to help developers monitor the availability and performance of their API endpoints from a centralized dashboard.
 
-When an API becomes slow, returns an unexpected status code, or stops responding, developers need a reliable way to identify the problem and understand its history.
+Instead of manually sending requests to individual endpoints, API Sentinel provides a structured way to register APIs, execute health checks, measure response times, and store monitoring results.
 
-API Sentinel provides a centralized dashboard to:
+The platform evaluates HTTP responses and classifies endpoints based on their availability.
 
-- Register and manage API endpoints.
-- Trigger health checks and inspect their results.
-- Identify healthy and failing endpoints.
-- Measure API response times.
-- Review historical health-check records.
-- Track endpoint uptime and performance trends.
+The central idea is simple:
 
-Rather than manually testing endpoints one by one, API Sentinel brings monitoring information into a single interface.
+> **Know when an API is healthy, identify when it fails, and understand how it performs over time.**
 
-## Product Architecture
+## The problem
 
-The application follows a client-server architecture built around React, Express, and MongoDB.
+Modern applications depend on multiple APIs and external services. A single unavailable or slow endpoint can affect an entire application.
 
-### High-level system architecture
+Developers often need to manually test endpoints, inspect responses, and repeat these checks to understand service availability.
+
+API Sentinel aims to simplify this process through:
+
+- **Centralized monitoring:** Maintain multiple API endpoint configurations in one place.
+- **Health checks:** Execute HTTP requests against registered endpoints.
+- **Response-time measurement:** Measure how long an endpoint takes to respond.
+- **Failure detection:** Identify unsuccessful HTTP responses and request errors.
+- **Monitoring history:** Persist individual health-check results for later analysis.
+- **Endpoint configuration:** Control monitoring settings and endpoint activation.
+
+## Product workflow
+
+```mermaid
+flowchart LR
+    A["Register API Endpoint"] --> B["Save Endpoint Configuration"]
+    B --> C["Select Endpoint"]
+    C --> D["Execute HTTP Request"]
+    D --> E["Measure Response Time"]
+    E --> F{"HTTP Status 200–399?"}
+    F -->|Yes| G["Mark UP"]
+    F -->|No| H["Mark DOWN"]
+    G --> I["Create Check Result"]
+    H --> I
+    I --> J["Persist in MongoDB"]
+    J --> K["Display Monitoring Result"]
+
+    classDef input fill:#172554,stroke:#60A5FA,color:#EFF6FF
+    classDef process fill:#164E63,stroke:#22D3EE,color:#ECFEFF
+    classDef decision fill:#312E81,stroke:#A78BFA,color:#F5F3FF
+    classDef success fill:#14532D,stroke:#4ADE80,color:#F0FDF4
+    classDef failure fill:#7F1D1D,stroke:#F87171,color:#FEF2F2
+
+    class A,C input
+    class B,D,E,I,J,K process
+    class F decision
+    class G success
+    class H failure
+```
+
+## System architecture
+
+API Sentinel uses a client-server architecture with a React frontend, an Express backend, and MongoDB for persistent storage.
+
+The backend coordinates endpoint configuration, health-check execution, HTTP response evaluation, and monitoring-result persistence.
 
 ```mermaid
 flowchart TB
-    subgraph CLIENT["CLIENT LAYER"]
-        UI["React Dashboard"]
-        PAGES["Dashboard · Endpoints · Details"]
-        AXIOS["Axios HTTP Client"]
-        UI --> PAGES
-        PAGES --> AXIOS
-    end
+    U["User"] --> UI["React + Vite Dashboard"]
+    UI --> API["Express REST API"]
 
-    subgraph SERVER["APPLICATION LAYER"]
-        API["Express.js REST API"]
-        ROUTES["API Routes"]
-        CONTROLLERS["Request Handling & Business Logic"]
-        CHECKER["Health Check Engine"]
-        API --> ROUTES
-        ROUTES --> CONTROLLERS
-        CONTROLLERS --> CHECKER
-    end
+    API --> EC["Endpoint Management"]
+    EC --> DB[("MongoDB")]
 
-    subgraph DATA["PERSISTENCE LAYER"]
-        MONGO[("MongoDB")]
-        ENDPOINTS["Endpoint Collection"]
-        RESULTS["CheckResult Collection"]
-        MONGO --- ENDPOINTS
-        MONGO --- RESULTS
-    end
+    API --> HC["Health Check Controller"]
+    HC --> AX["Axios HTTP Client"]
+    AX --> EXT["External API Endpoint"]
 
-    AXIOS <-->|"HTTP / JSON"| API
-    CONTROLLERS <-->|"CRUD Operations"| MONGO
-    CHECKER -->|"Save Check Results"| RESULTS
-    CHECKER -->|"Update / Read Endpoint Data"| ENDPOINTS
+    EXT --> AX
+    AX --> HC
 
-    style CLIENT fill:#eaf2ff,stroke:#3975c6,color:#172b4d
-    style SERVER fill:#edf7f1,stroke:#39845b,color:#173c2a
-    style DATA fill:#fff5e8,stroke:#c28a3c,color:#553b18
+    HC --> EVAL["Response Evaluation"]
+    EVAL --> CR["CheckResult Model"]
+    CR --> DB
+
+    DB --> API
+    API --> UI
+
+    classDef client fill:#172554,stroke:#60A5FA,color:#EFF6FF
+    classDef service fill:#164E63,stroke:#22D3EE,color:#ECFEFF
+    classDef store fill:#312E81,stroke:#A78BFA,color:#F5F3FF
+    classDef external fill:#713F12,stroke:#FBBF24,color:#FFFBEB
+
+    class U,UI client
+    class API,EC,HC,AX,EVAL,CR service
+    class DB store
+    class EXT external
 ```
 
-### Core monitoring workflow
+### Main components
 
-The health-check process evaluates an endpoint by sending an HTTP request, measuring its response time, interpreting the result, and persisting the check record.
+| Component | Responsibility |
+|---|---|
+| **React frontend** | Monitoring dashboard and user interface. |
+| **Vite** | Frontend development and build tooling. |
+| **Express backend** | REST API and application request handling. |
+| **Endpoint model** | Stores endpoint configuration and monitoring settings. |
+| **Health-check controller** | Executes HTTP checks and evaluates responses. |
+| **Axios** | Sends HTTP requests to monitored endpoints. |
+| **CheckResult model** | Stores the outcome of each health check. |
+| **MongoDB** | Persists endpoint configurations and check history. |
+
+## Health-check execution
+
+The health-check engine is responsible for evaluating the availability of a configured endpoint.
+
+When a health-check request is received, the backend retrieves the endpoint configuration and uses Axios to execute the configured HTTP method.
+
+The implementation uses a **5-second request timeout** and measures response duration in milliseconds.
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Developer
-    participant Dashboard as React Dashboard
-    participant Server as Express API
-    participant Monitor as Health Check Engine
-    participant Target as Monitored API
+    participant User
+    participant UI as React Frontend
+    participant API as Express Backend
     participant DB as MongoDB
+    participant AX as Axios
+    participant EXT as External API
 
-    Developer->>Dashboard: Trigger health check
-    Dashboard->>Server: POST /api/endpoints/:id/health
-    Server->>DB: Retrieve endpoint configuration
-    DB-->>Server: Endpoint details
-    Server->>Monitor: Execute health check
-    Monitor->>Target: Send HTTP request
-    Target-->>Monitor: HTTP response / error
-    Monitor->>Monitor: Measure response time
-    Monitor->>Monitor: Evaluate status
-    Monitor->>DB: Save CheckResult
-    DB-->>Monitor: Saved record
-    Monitor-->>Server: Check result
-    Server-->>Dashboard: JSON response
-    Dashboard-->>Developer: Display health status
+    User->>UI: Request endpoint health check
+    UI->>API: GET /api/endpoints/:id/health
+    API->>DB: Fetch endpoint configuration
+    DB-->>API: Endpoint details
+    API->>AX: Execute HTTP request
+    AX->>EXT: Send configured request
+    EXT-->>AX: HTTP response
+    AX-->>API: Response + timing
+    API->>API: Evaluate response status
+    API->>DB: Save CheckResult
+    DB-->>API: Saved result
+    API-->>UI: Health-check result
+    UI-->>User: Display endpoint status
 ```
 
-### Health evaluation logic
+### Health classification
 
-```mermaid
-flowchart TD
-    A([Health Check Initiated]) --> B[Load Endpoint Configuration]
-    B --> C[Send HTTP Request]
-    C --> D{Request Result}
-    D -->|HTTP Response| E{Status Code}
-    D -->|Request Failure| F[Mark Endpoint DOWN]
-    E -->|200–399| G[Mark Endpoint UP]
-    E -->|Other Status Codes| F
-    G --> H[Record Response Time]
-    F --> H
-    H --> I[Save CheckResult]
-    I --> J([Return Monitoring Result])
+The current implementation uses the following classification:
 
-    style G fill:#dcfce7,stroke:#16a34a,color:#14532d
-    style F fill:#fee2e2,stroke:#dc2626,color:#7f1d1d
-```
-
-## Features
-
-| Feature | Description |
+| Condition | Result |
 |---|---|
-| Endpoint Management | Create, view, update, and delete monitored endpoints. |
-| Health Checks | Execute HTTP health checks against registered endpoints. |
-| Status Detection | Classify responses as UP or DOWN based on the HTTP result. |
-| Response Time Tracking | Measure the time taken by monitored APIs to respond. |
-| Monitoring History | Store and review historical health-check records. |
-| Uptime Information | Retrieve endpoint uptime information. |
-| Dashboard | Centralized overview of endpoint health and performance. |
-| Endpoint Details | Inspect individual endpoint configuration and monitoring information. |
+| HTTP status `200–399` | `UP` |
+| HTTP status outside `200–399` | `DOWN` |
+| Request timeout | `DOWN` |
+| Network or request error | `DOWN` |
 
-## Technology Stack
+Each execution records the status, response time, HTTP status code when available, error message, and check timestamp.
 
-### Frontend
+## Core features
 
-- **React.js** — Component-based user interface.
-- **Vite** — Frontend development and build tooling.
-- **React Router DOM** — Client-side navigation.
-- **Axios** — HTTP communication with the backend.
-- **CSS** — Responsive dashboard styling.
+### 01 / Endpoint configuration
 
-### Backend
+Register API endpoints with their monitoring configuration.
 
-- **Node.js** — JavaScript runtime.
-- **Express.js** — REST API and request handling.
-- **Mongoose** — MongoDB object modeling.
-- **Axios** — HTTP requests to monitored endpoints.
+- Endpoint name
+- Target URL
+- HTTP method
+- Monitoring interval in seconds
+- Active/inactive state
 
-### Database
+### 02 / HTTP health checks
 
-- **MongoDB** — Persistent storage for endpoint configurations and health-check records.
+Execute HTTP requests against configured endpoints using Axios.
 
-## Data Model
+- Configured HTTP method
+- Request timeout
+- HTTP response evaluation
+- Error handling
+- Endpoint health classification
 
-API Sentinel uses two central data entities.
+### 03 / Response-time measurement
 
-### Endpoint
+Measure the duration of each health-check request in milliseconds.
 
-Represents an API registered for monitoring.
+This measurement provides a foundation for identifying slow endpoints and understanding performance changes.
+
+### 04 / Failure detection
+
+Identify endpoints that return unsuccessful HTTP responses or fail to respond within the configured timeout.
+
+### 05 / Persistent monitoring results
+
+Save individual check results in MongoDB, allowing monitoring history to be retained rather than relying only on temporary application state.
+
+## Data architecture
+
+API Sentinel uses two main data models to represent monitored endpoints and their health-check results.
+
+### Endpoint model
+
+Stores the configuration of an API endpoint.
 
 | Field | Description |
 |---|---|
-| name | Display name of the endpoint |
-| url | Target API URL |
-| method | HTTP request method |
-| intervalSecond | Configured check interval |
-| isActive | Whether the endpoint is active |
+| `name` | Name of the endpoint |
+| `url` | Target API URL |
+| `method` | HTTP request method |
+| `intervalSecond` | Configured monitoring interval |
+| `isActive` | Whether the endpoint is active |
 
-### CheckResult
+### CheckResult model
 
-Represents an individual health-check execution.
+Stores the outcome of an individual health-check execution.
 
 | Field | Description |
 |---|---|
-| endpointId | Reference to the monitored endpoint |
-| status | UP or DOWN |
-| responseTimeMs | Measured response time |
-| httpStatusCode | Returned HTTP status code |
-| errorMessage | Error information, when available |
-| checkedAt | Time of the health check |
+| `endpoint` | Reference to the monitored endpoint |
+| `status` | `UP` or `DOWN` |
+| `responseTimeMs` | Response duration in milliseconds |
+| `httpStatusCode` | HTTP response status code |
+| `errorMessage` | Error information when applicable |
+| `checkedAt` | Timestamp of the check |
 
 ### Entity relationship
 
 ```mermaid
 erDiagram
-    ENDPOINT ||--o{ CHECK_RESULT : has
+    ENDPOINT ||--o{ CHECK_RESULT : generates
 
     ENDPOINT {
-        ObjectId _id PK
+        ObjectId _id
         string name
         string url
         string method
@@ -209,33 +268,58 @@ erDiagram
     }
 
     CHECK_RESULT {
-        ObjectId _id PK
-        ObjectId endpointId FK
+        ObjectId _id
+        ObjectId endpoint
         string status
         number responseTimeMs
         number httpStatusCode
         string errorMessage
-        datetime checkedAt
+        date checkedAt
     }
 ```
 
-## API Reference
+## API reference
 
-The backend exposes REST endpoints for managing monitored APIs and retrieving monitoring information.
+Base URL:
 
-| Method | Endpoint | Description |
+```text
+http://localhost:5000
+```
+
+### Server health
+
+| Method | Route | Description |
 |---|---|---|
-| GET | `/api/health` | Check backend availability |
-| POST | `/api/endpoints` | Create an endpoint |
-| GET | `/api/endpoints` | Retrieve endpoints |
-| GET | `/api/endpoints/:id` | Retrieve endpoint details |
-| PATCH | `/api/endpoints/:id` | Update an endpoint |
-| DELETE | `/api/endpoints/:id` | Delete an endpoint |
-| POST | `/api/endpoints/:id/health` | Execute a health check |
-| GET | `/api/endpoints/:id/history` | Retrieve check history |
-| GET | `/api/endpoints/:id/uptime` | Retrieve uptime information |
+| `GET` | `/api/health` | Checks whether the backend server is running. |
 
-## Project Structure
+Example response:
+
+```json
+{
+  "success": true,
+  "message": "Api sentinel server is running"
+}
+```
+
+### Endpoint health check
+
+| Method | Route | Description |
+|---|---|---|
+| `GET` | `/api/endpoints/:id/health` | Executes a health check for a configured endpoint. |
+
+Example request:
+
+```http
+GET /api/endpoints/ENDPOINT_ID/health
+```
+
+The backend retrieves the endpoint configuration, executes the HTTP request, evaluates the response, and stores the result.
+
+*Additional routes can be documented here as the backend API surface is finalized.*
+
+## Project structure
+
+The application separates frontend and backend responsibilities.
 
 ```text
 api-sentinel/
@@ -245,39 +329,33 @@ api-sentinel/
 │   │   ├── Endpoint.js
 │   │   └── CheckResult.js
 │   │
-│   ├── routes/
-│   ├── controllers/
-│   ├── middleware/
-│   ├── config/
 │   ├── server.js
+│   ├── .env
 │   └── package.json
 │
 ├── frontend/
-│   ├── public/
 │   ├── src/
 │   │   ├── components/
 │   │   ├── pages/
-│   │   ├── services/
 │   │   ├── App.jsx
 │   │   └── main.jsx
 │   │
-│   ├── index.html
-│   └── package.json
+│   ├── public/
+│   ├── package.json
+│   └── index.html
 │
 └── README.md
 ```
 
-*The tree illustrates the intended separation of frontend and backend responsibilities. Adjust folder names to match the final repository.*
+*This is a logical overview. Adjust the tree if your current repository contains additional folders or different file locations.*
 
-## Getting Started
-
-Follow these steps to run API Sentinel locally.
+## Development setup
 
 ### Prerequisites
 
 - Node.js
 - npm
-- MongoDB instance
+- MongoDB local instance or MongoDB Atlas
 - Git
 
 ### 1. Clone the repository
@@ -294,108 +372,140 @@ cd backend
 npm install
 ```
 
-Create a `.env` file using the environment variable names expected by your backend configuration.
-
-Example:
+Create a `.env` file:
 
 ```env
-PORT=8080
+PORT=5000
 MONGO_URI=your_mongodb_connection_string
 ```
 
-### 3. Start the backend
+Start the backend using the start script configured in `package.json`:
 
 ```bash
 npm start
 ```
 
-### 4. Configure the frontend
+### 3. Configure the frontend
 
 Open another terminal:
 
 ```bash
 cd frontend
 npm install
-```
-
-### 5. Start the frontend
-
-```bash
 npm run dev
 ```
 
-Open the local development URL displayed by Vite in your terminal.
+### 4. Open the application
 
-## Example Health Check Result
+Open the local development URL displayed by Vite.
 
-A successful API health check can return information in this general form:
+Verify the backend:
 
-```json
-{
-  "success": true,
-  "data": {
-    "status": "UP",
-    "responseTimeMs": 142,
-    "httpStatusCode": 200,
-    "checkedAt": "2026-10-30T12:00:00.000Z"
-  }
-}
+```text
+http://localhost:5000/api/health
 ```
 
-*Illustrative response structure. Actual response fields depend on the backend implementation.*
+## Engineering decisions
 
-## Engineering Considerations
-
-API Sentinel is built around a few important engineering principles:
-
-- **Separation of concerns:** The React client, Express application, monitoring logic, and persistence layer have distinct responsibilities.
-- **Persistence:** Health-check records are stored so that previous results can be inspected.
-- **Failure handling:** HTTP failures and request errors are considered when evaluating endpoint health.
-- **Performance visibility:** Response-time measurements help identify slow APIs.
-- **Extensibility:** The monitoring model can be extended with additional metrics and alerting capabilities.
-
-## Future Improvements
-
-Potential directions for further development:
-
-- Automated recurring monitoring with a reliable scheduling mechanism.
-- Email and notification-based incident alerts.
-- Configurable timeout and retry policies.
-- Response-time percentile analytics.
-- Historical uptime and availability reports.
-- Multi-user workspaces and role-based access.
-- Monitoring of authenticated APIs.
-- Exportable monitoring reports.
-
-## Screenshots
-
-Add actual screenshots of the completed application here.
-
-| Dashboard | Endpoint Management |
+| Decision | Engineering reasoning |
 |---|---|
-| ![Dashboard](screenshots/dashboard.png) | ![Endpoints](screenshots/endpoints.png) |
+| React + Vite | Component-based frontend with fast development tooling. |
+| Express REST API | Lightweight backend request handling. |
+| MongoDB + Mongoose | Persistent storage for endpoint configurations and monitoring results. |
+| Axios | HTTP request execution and timeout configuration. |
+| 5-second timeout | Prevents a health-check request from waiting indefinitely. |
+| `200–399` as `UP` | Treats successful and redirect HTTP responses as reachable. |
+| Separate check records | Preserves individual monitoring outcomes for historical analysis. |
 
-| Endpoint Details | Health History |
-|---|---|
-| ![Endpoint Details](screenshots/endpoint-details.png) | ![Health History](screenshots/history.png) |
+### Important implementation considerations
 
-## Contributing
+**Timeout handling**
 
-Contributions, suggestions, and improvements are welcome.
+A target endpoint may become unresponsive. A finite timeout prevents the monitoring request from waiting indefinitely.
 
-1. Fork the repository.
-2. Create a feature branch.
-3. Commit your changes.
-4. Open a pull request describing your changes.
+**Response classification**
 
-## License
+A response is considered `UP` when its HTTP status code is between 200 and 399. Other HTTP responses and request errors are classified as `DOWN`.
 
-This project is available under the MIT License. See the `LICENSE` file for details.
+**Monitoring history**
+
+Saving each check result provides the data foundation for historical status views, response-time trends, and uptime calculations.
+
+## Roadmap
+
+The following enhancements represent potential future development, not completed functionality.
+
+| Phase | Enhancement | Status |
+|---|---|---|
+| 01 | Endpoint configuration and persistence | Implemented |
+| 02 | HTTP health-check execution | Implemented |
+| 03 | Response-time measurement | Implemented |
+| 04 | Health classification and error handling | Implemented |
+| 05 | Persistent check-result history | Implemented |
+| 06 | Automated recurring health-check scheduler | Planned |
+| 07 | Uptime percentage and reliability metrics | Planned |
+| 08 | Historical response-time visualizations | Planned |
+| 09 | Failure notifications and alerting | Planned |
+| 10 | Expanded automated testing and evaluation | Planned |
+
+<details>
+<summary><strong>Engineering checklist</strong></summary>
+
+- [x] Create endpoint and check-result data models
+- [x] Configure Express backend
+- [x] Connect MongoDB using Mongoose
+- [x] Execute HTTP health checks using Axios
+- [x] Configure request timeout handling
+- [x] Measure response time
+- [x] Classify endpoint health
+- [x] Persist health-check results
+- [ ] Implement automated recurring checks
+- [ ] Calculate historical uptime
+- [ ] Build response-time trend analytics
+- [ ] Implement alert notifications
+- [ ] Expand automated testing
+
+</details>
+
+## Reliability and limitations
+
+- A successful health check confirms that an endpoint responded according to the configured HTTP status rules; it does not guarantee that every underlying business operation works correctly.
+- Response-time measurements can vary with network conditions, server load, and target availability.
+- A timeout indicates that the request did not complete within the configured period, not necessarily that the target service is permanently unavailable.
+- Monitoring history depends on successful persistence of check results.
+- Automated scheduling, alerting, and uptime analytics should only be considered available once implemented and verified.
+
+## Contributing and feedback
+
+API Sentinel is an engineering project focused on API monitoring, backend development, and service reliability.
+
+Suggestions and feedback regarding endpoint monitoring, health classification, error handling, and observability are welcome.
+
+When reporting an issue, include:
+
+- The endpoint configuration (without private credentials).
+- Expected behavior.
+- Actual behavior.
+- Relevant error output.
+- Steps to reproduce the issue.
+
+Never commit API keys, database credentials, or other private configuration values.
 
 ---
 
-<p align="center">
-  **API Sentinel**
-  <br/>
-  Making API health visible, one endpoint at a time.
-</p>
+<div align="center">
+
+**API Sentinel — visibility is the first step toward reliability.**
+
+<sub>Designed and developed by
+<a href="https://github.com/Sarthaktanpure">Sarthak Tanpure</a></sub>
+
+<br/><br/>
+
+<em>Monitor intelligently. Detect failures. Build reliable systems.</em>
+
+<br/><br/>
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F172A,50:164E63,100:0F172A&height=120&section=footer" width="100%" alt="API Sentinel footer"/>
+
+</div>
